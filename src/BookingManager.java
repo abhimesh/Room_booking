@@ -6,6 +6,7 @@ public class BookingManager {
     static  int bookingId=0;
     private HashMap<Integer,Booking> BookingMap=new HashMap<>();
     RoomManager roomManager;
+    private LockById lockById=new LockById();
     private static BookingManager obj=null;
     public static BookingManager getInstance()
     {
@@ -29,9 +30,11 @@ public class BookingManager {
 
     public void execute(int startTime,int endTime,int RoomId,int userId)
     {
+        lockById.lock(Integer.toString(RoomId));
         Booking booking=new Booking(RoomId,userId,startTime,endTime);
         booking.bookRoom();
         putInMap(booking);
+        lockById.unlock(Integer.toString(RoomId));
     }
 
     public void availableRoomInBuilding(String Building)
